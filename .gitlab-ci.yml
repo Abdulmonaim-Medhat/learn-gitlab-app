@@ -6,7 +6,7 @@ Build_the_website:
   script:
     - node --version
     - npm --version
-    - nmp ci
+    - npm ci
     - npm run build
   artifacts:
     paths:
