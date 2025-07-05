@@ -1,0 +1,13 @@
+stages:
+  - build
+Build_the_website:
+  image: node:22-alpine
+  stage: build
+  script:
+    - node --version
+    - npm --version
+    - nmp ci
+    - npm run build
+  artifacts:
+    paths:
+      - build/  
