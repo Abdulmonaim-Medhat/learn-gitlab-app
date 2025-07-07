@@ -1,0 +1,44 @@
+name: WorkFlow One
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Build_the_website:
+    runs-on: node:22-alpine
+    steps:
+      - name: Checkout the Repo
+        uses: actions/checkout@4.2.2
+        
+      - name: Check Node Version
+        run: node --version
+
+      - name: Check npm version
+        run: npm --version
+
+      - name: Install dependances 
+        run: npm ci
+
+      - name: Build the website
+        run: npm build
+        
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build/
+          
+  Testing_the_website:
+    runs-on: node:22-alpine
+    steps:
+      - name: Test t=file existance
+        run: test -f build/index.html
+  
+  Unit-Testing:
+    runs-on: node:22-alpine
+    steps:
+      - name: Install dependances
+        run: npm ci
+
+      - name: Runs unit testing
+        run: npm test
