@@ -7,13 +7,14 @@ jobs:
   Build_the_website:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          
       - name: Checkout the Repo
         uses: actions/checkout@4.2.2
-        
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      
       - name: Check Node Version
         run: node --version
 
@@ -36,10 +37,8 @@ jobs:
     needs: Build_the_website
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           
@@ -50,10 +49,9 @@ jobs:
     needs: Build_the_website
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          
+      - name: Checkout the Repo
+        uses: actions/checkout@v4
+        
       - name: Install dependances
         run: npm ci
 
