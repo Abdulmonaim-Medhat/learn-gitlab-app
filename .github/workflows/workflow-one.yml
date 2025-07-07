@@ -1,74 +1,84 @@
-name: WorkFlow One
+name: Website CI Pipeline
+
 on:
   push:
-    branches:
-      - main
+    branches:  main 
+
 jobs:
-  Build_the_website:
+  build:
+    name: Build Website
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout the Repo
-        uses: actions/checkout@4.2.2
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      
-      - name: Check Node Version
-        run: node --version
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
 
-      - name: Check npm version
-        run: npm --version
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Install dependances 
-        run: npm ci
+    - name: Build project
+      run: npm run build
 
-      - name: Build the website
-        run: npm run build
-        
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: build\
-          
-  Testing_the_website:
-    needs: Build_the_website
+    - name: Verify build output
+      run: |
+        echo "Build directory contents:"
+        ls -R build/
+        test -f build/index.html || (echo "Error: index.html not found in build directory"; exit 1)
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: website-build
+        path: build/
+        retention-days: 1
+
+  test:
+    name: Test Website
+    needs: build
     runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: artifact-build/  # Explicit download path
-  
-      - name: Verify artifact structure
-        run: |
-          echo "Artifact contents:"
-          ls -R artifact-build/
-          echo "Checking for HTML files:"
-          find artifact-build/ -name "*.html" || echo "No HTML files found"
-  
-      - name: Test file existence
-        run: |
-          if [ -f "artifact-build/index.html" ]; then
-            echo "✅ index.html exists"
-          else
-            echo "❌ index.html missing - these files exist:"
-            find artifact-build/ -type f
-            exit 1
-          fi
-  
-  Unit-Testing:
-    needs: Build_the_website
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the Repo
-        uses: actions/checkout@v4
-        
-      - name: Install dependances
-        run: npm ci
 
-      - name: Runs unit testing
-        run: npm test
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: website-build
+        path: build/
+
+    - name: Check for index.html
+      run: |
+        if [ -f "build/index.html" ]; then
+          echo "✅ index.html exists"
+          echo "File size: $(du -h build/index.html | cut -f1)"
+        else
+          echo "❌ Error: index.html missing!"
+          echo "Build directory contains:"
+          ls -R build/
+          exit 1
+        fi
+
+  unit_tests:
+    name: Run Unit Tests
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test
