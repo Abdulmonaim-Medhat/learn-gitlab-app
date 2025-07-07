@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: build/
+          path: build/*
           
   Testing_the_website:
     needs: Build_the_website
