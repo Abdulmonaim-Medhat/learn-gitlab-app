@@ -14,5 +14,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Ayhaga
-        run: echo "Ay 7aga 3lashan el manual workflow"
+        run: echo "Ay 7aga 3lashan el manual workflowon the 4{{inputs.environment}}"
       
