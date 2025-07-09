@@ -1,5 +1,14 @@
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Cohhose an environment"
+        required: true
+        default: "Testing"
+        type: choice
+        options:
+          - production
+          - testing
 jobs:
   AyHaga:
     runs-on: ubuntu-latest
