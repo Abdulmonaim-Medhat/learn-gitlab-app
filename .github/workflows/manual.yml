@@ -7,8 +7,8 @@ on:
         default: "Testing"
         type: choice
         options:
-          - production
-          - testing
+          - Production
+          - Testing
 jobs:
   AyHaga:
     runs-on: ubuntu-latest
