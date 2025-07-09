@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
 jobs:
   AyHaga:
-    runs-on: ubunu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Run Ayhaga
         run: echo "Ay 7aga 3lashan el manual workflow"
