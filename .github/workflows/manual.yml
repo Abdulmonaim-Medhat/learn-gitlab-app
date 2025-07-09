@@ -1,0 +1,9 @@
+on:
+  workflow_dispatch:
+jobs:
+  AyHaga:
+    runs-on: ubunu-latest
+    steps:
+      - name: Run Ayhaga
+        run: echo "Ay 7aga 3lashan el manual workflow"
+      
