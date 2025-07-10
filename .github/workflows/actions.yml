@@ -1,0 +1,17 @@
+on:
+  workflow_dispatch
+
+jobs:
+  Hybred_Job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: VM-step-one
+        run: echo "this step was running in a VM"
+
+      - name: Container-setp
+        uses: docker://alpine:3.14
+        with:
+          entrypoint: /bin/sh
+          args: |
+            -c "echo 'This step in running in a docker container'"
+            
