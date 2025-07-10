@@ -124,7 +124,7 @@ jobs:
           path: build/
 
       - name: Check for index.html
-        run: test -f /build/index.html
+        run: test -f build/index.html
   Unit_tests:
     name: Run Unit Tests
     needs: build_Containerized
