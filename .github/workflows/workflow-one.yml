@@ -1,22 +1,98 @@
-name: Website CI Pipeline
+# name: Website CI Pipeline
+# on:
+#   workflow_dispatch
 
+# jobs:
+#   build:
+#     name: Build Website
+#     runs-on: ubuntu-latest
+    
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
+
+#     - name: Setup Node.js
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: 22
+#         cache: 'npm'
+
+#     - name: Install dependencies
+#       run: npm ci
+
+#     - name: Build project
+#       run: npm run build
+
+#     - name: Verify build output
+#       run: |
+#         echo "Build directory contents:"
+#         ls -R build/
+#         test -f build/index.html || (echo "Error: index.html not found in build directory"; exit 1)
+
+#     - name: Upload artifacts
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: website-build
+#         path: build/
+#         retention-days: 1
+
+#   test:
+#     name: Test Website
+#     needs: build
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Download artifacts
+#       uses: actions/download-artifact@v4
+#       with:
+#         name: website-build
+#         path: build/
+
+#     - name: Check for index.html
+#       run: |
+#         if [ -f "build/index.html" ]; then
+#           echo "✅ index.html exists"
+#           echo "File size: $(du -h build/index.html | cut -f1)"
+#         else
+#           echo "❌ Error: index.html missing!"
+#           echo "Build directory contains:"
+#           ls -R build/
+#           exit 1
+#         fi
+
+#   unit_tests:
+#     name: Run Unit Tests
+#     needs: build
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
+
+#     - name: Setup Node.js
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: 22
+#         cache: 'npm'
+
+#     - name: Install dependencies
+#       run: npm ci
+
+#     - name: Run tests
+#       run: npm test
+name: Website CI Pipeline
 on:
   workflow_dispatch
 
 jobs:
-  build:
+  build_Containerized:
     name: Build Website
     runs-on: ubuntu-latest
-    
+    container:
+      image: docker://node:22-alpine
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 22
-        cache: 'npm'
 
     - name: Install dependencies
       run: npm ci
@@ -36,48 +112,32 @@ jobs:
         name: website-build
         path: build/
         retention-days: 1
-
-  test:
+  Testing:
     name: Test Website
-    needs: build
+    needs: build_Containerized
     runs-on: ubuntu-latest
-
     steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: website-build
-        path: build/
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: website-build
+          path: build/
 
-    - name: Check for index.html
-      run: |
-        if [ -f "build/index.html" ]; then
-          echo "✅ index.html exists"
-          echo "File size: $(du -h build/index.html | cut -f1)"
-        else
-          echo "❌ Error: index.html missing!"
-          echo "Build directory contains:"
-          ls -R build/
-          exit 1
-        fi
-
-  unit_tests:
+      - name: Check for index.html
+        run: test -f /build/index.html
+  Unit_tests:
     name: Run Unit Tests
-    needs: build
+    needs: build_Containerized
     runs-on: ubuntu-latest
-
+    container:
+      image: docker://node:22-alpine
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 22
-        cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Run tests
-      run: npm test
+      - name: Run tests
+        run: npm test
+  
