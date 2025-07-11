@@ -5,8 +5,13 @@ jobs:
   job-one:
     runs-on: ubuntu-latest
     steps:
-    - run: |
+    - name: show a warning
+      run: |
         deprecated=true
           if [[ deprecated ]]; then
             echo "::warning::Debrecated function found"
           fi
+    - name: assigne API Key
+      run: echo "Pass123" >> $GITHUB_ENV
+    - name: use API Key
+      run: echo "API Key is ${{GITHUB_ENV}}"
