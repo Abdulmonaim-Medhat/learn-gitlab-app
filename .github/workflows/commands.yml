@@ -1,5 +1,7 @@
 on:
-  workflow_dispatch
+  push:
+    branches: 
+      - main
 
 jobs:
   job-one:
@@ -12,6 +14,6 @@ jobs:
             echo "::warning::Debrecated function found"
           fi
     - name: assigne API Key
-      run: echo "Pass123" >> $GITHUB_ENV
+      run: echo "API_KEY=Pass123" >> $GITHUB_ENV
     - name: use API Key
-      run: echo "API Key is ${{GITHUB_ENV}}"
+      run: echo "API Key is $API_KEY"
