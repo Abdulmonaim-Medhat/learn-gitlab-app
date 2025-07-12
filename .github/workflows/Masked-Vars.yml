@@ -1,0 +1,15 @@
+on:
+  push:
+    branches:
+      - manin
+jobs:
+  job-one:
+    runs-on: ubuntu-latest
+    name: Using Masked Passwor
+    steps:
+      - name: Setting the password
+        run: echo "SEC-PASS=1234abc">>$GITHUB_ENV
+      - name: Using the Passwor in the workflow
+        run: |
+          echo "::add-mask::$SEC-PASS"
+          echo "The Password Is $SEC-PASS"
