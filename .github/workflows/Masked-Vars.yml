@@ -12,4 +12,4 @@ jobs:
       - name: Using the Passwor in the workflow
         run: |
           echo "::add-mask::$SEC-PASS"
-          echo "The Password Is $SEC-PASS"
+          echo "The Password Is----> $SEC-PASS"
