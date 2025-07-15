@@ -1,0 +1,12 @@
+name: Schedual Workflow
+on:
+  schedule:
+    - cron: '*/2 * * * *'
+
+jobs:
+  job-one:
+    runs-on: ubuntu-latest
+    name: Using Masked Passwor
+    steps:
+      - run: echo " date is $(date)"
+    
