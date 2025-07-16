@@ -13,5 +13,5 @@ jobs:
     steps:
       - name : "Print Basic Information"
         run: | 
-          echo "REF: $HITHUB_REF"
+          echo "REF: $GITHUB_REF"
           echo "Job ID: $GITHUB_JOB"
