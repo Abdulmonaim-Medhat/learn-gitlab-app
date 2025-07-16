@@ -1,0 +1,17 @@
+name: Multi Events Workflow
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_requests:
+    branches:
+      - main
+jobs:
+  Hello-World:
+    runs-on: ubuntu-latest
+    steps:
+      - name : "Print Basic Information"
+        run: | 
+          echo "REF: $HITHUB_REF"
+          echo "Job ID: $GITHUB_JOB"
