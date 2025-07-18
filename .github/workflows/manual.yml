@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs: 
       name:
-        description: 'of the person to greet'
+        description: 'Name of the person to greet'
         required: true
         type: string
       greeting:
