@@ -1,18 +1,47 @@
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: "Cohhose an environment"
+#         required: true
+#         default: "Testing"
+#         type: choice
+#         options:
+#           - Production
+#           - Testing
+# jobs:
+#   AyHaga:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Run Ayhaga
+#         run: echo "Ay 7aga 3lashan el manual workflowon the ${{inputs.environment}}"
+name: manual-Workflow 
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: "Cohhose an environment"
+      name:
+        description: 'of the person to greet'
         required: true
-        default: "Testing"
-        type: choice
-        options:
-          - Production
-          - Testing
+        type: string
+      greeting:
+        description: 'type of greetings'
+        required: true
+        type: string
+      data:
+        description: 'A Base64 file'
+        required: true
+        type: string
 jobs:
-  AyHaga:
+  greet:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Ayhaga
-        run: echo "Ay 7aga 3lashan el manual workflowon the ${{inputs.environment}}"
-      
+      - name: Decode File Content
+        run: |
+          echo "${{inputs.data}}" | base64 --decode > ./decode_file.txt
+      - name: 'Display Greetings'
+        run: |
+          echo "${{inputs.greeting}},{{inputs.name}}"
+      - name: Display File Content
+        run: |
+          echo "contents of the file "
+          cat /decode_file.txt
